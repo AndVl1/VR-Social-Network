@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "501111035240",
+    "firebase_url": "https://vr-chat-mobile.firebaseio.com",
+    "project_id": "vr-chat-mobile",
+    "storage_bucket": "vr-chat-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501111035240:android:d22dbb1862340a0db2f2dd",
+        "android_client_info": {
+          "package_name": "ru.bmstu.iu9.vrsocialnetwork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501111035240-6vkn14330ntpgts6m4ck8aq08g3dt7t0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsWVz0GkptDA2QO2gQRWwZs5eNyUGtFgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501111035240-6vkn14330ntpgts6m4ck8aq08g3dt7t0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
