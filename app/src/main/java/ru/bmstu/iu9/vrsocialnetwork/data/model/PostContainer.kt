@@ -1,4 +1,3 @@
 package ru.bmstu.iu9.vrsocialnetwork.data.model
 
-class PostContainer {
-}
+data class PostContainer(val data: Post)

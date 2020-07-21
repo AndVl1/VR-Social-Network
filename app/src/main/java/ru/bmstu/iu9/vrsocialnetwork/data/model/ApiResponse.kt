@@ -1,4 +1,3 @@
 package ru.bmstu.iu9.vrsocialnetwork.data.model
 
-class ApiResponse {
-}
+data class ApiResponse(val data: ApiListing)

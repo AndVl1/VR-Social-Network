@@ -1,4 +1,7 @@
 package ru.bmstu.iu9.vrsocialnetwork.data.model
 
-class ApiListing {
-}
+data class ApiListing(
+	val children: List<PostContainer>,
+	val before: String?,
+	val after: String?
+)
