@@ -5,6 +5,7 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.google.android.material.bottomappbar.BottomAppBar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.bmstu.iu9.vrsocialnetwork.R
@@ -31,7 +32,7 @@ class Main2Activity: AppCompatActivity() {
 
 //		val navView: NavigationView = findViewById(R.id.navigation_view)
 //
-//		navController = findNavController(R.id.main_graph)
+		navController = Navigation.findNavController(this, R.id.nav_host_fragment2)
 		setupBottomNavigationAndFab()
 //		navView.setupWithNavController(navController)
 	}

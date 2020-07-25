@@ -18,7 +18,7 @@ class PostsDataSource constructor(private val mRepository: MainRepository, priva
 		params: LoadInitialParams<String>,
 		callback: LoadInitialCallback<String, Post>
 	) {
-		mIOScope.launch {
+		mScope.launch {
 			try {
 				val response = mRepository.getPosts()
 				when {
@@ -35,7 +35,7 @@ class PostsDataSource constructor(private val mRepository: MainRepository, priva
 	}
 
 	override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Post>) {
-		mIOScope.launch {
+		mScope.launch {
 			try {
 				val response = mRepository.getPosts()
 				when {
@@ -52,7 +52,7 @@ class PostsDataSource constructor(private val mRepository: MainRepository, priva
 	}
 
 	override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, Post>) {
-		mIOScope.launch {
+		mScope.launch {
 			try {
 				val response = mRepository.getPosts()
 				when {

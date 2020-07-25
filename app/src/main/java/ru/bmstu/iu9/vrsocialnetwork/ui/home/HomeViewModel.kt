@@ -22,7 +22,8 @@ class HomeViewModel @ViewModelInject constructor(private val mainRepository: Mai
 			.setPageSize(30)
 			.setEnablePlaceholders(false)
 			.build()
-		postsLiveData = initializedPagedListBuilder(config).build()
+//		postsLiveData = initializedPagedListBuilder(config).build()
+		postsLiveData = LivePagedListBuilder(mainRepository.getLoadedPosts(), config).build()
 	}
 
 	fun getPosts(): LiveData<PagedList<Post>> = postsLiveData
