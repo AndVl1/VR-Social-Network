@@ -1,7 +1,10 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -48,6 +51,25 @@ class Main2Activity: AppCompatActivity() {
 
 				else -> false
 			}
+		}
+	}
+
+	private fun hideBottomAppBar() {
+		mMainBinding.run {
+			
+			bottomAppBar.performHide()
+			bottomAppBar.animate().setListener(object : AnimatorListenerAdapter() {
+				var isCanceled = false
+				override fun onAnimationEnd(animation: Animator?) {
+					if (isCanceled) return
+
+					bottomAppBar.visibility = View.GONE
+					fab.visibility = View.INVISIBLE
+				}
+				override fun onAnimationCancel(animation: Animator?) {
+					isCanceled = true
+				}
+			})
 		}
 	}
 
