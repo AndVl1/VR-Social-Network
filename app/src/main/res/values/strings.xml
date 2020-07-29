@@ -21,4 +21,8 @@
     <string name="preview_area">Camera Preview</string>
     <string name="capture">Capture</string>
     <string name="camera_permissions_error">Not all permissions granted</string>
+	<string name="search_menuItem">Search</string>
+	<string name="content_preview">Content Preview</string>
+    <string name="submit">Submit</string>
+    <string name="retry">Retry</string>
 </resources>

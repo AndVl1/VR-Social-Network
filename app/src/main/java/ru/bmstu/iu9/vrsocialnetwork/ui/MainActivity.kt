@@ -9,13 +9,17 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.bmstu.iu9.vrsocialnetwork.R
+import ru.bmstu.iu9.vrsocialnetwork.databinding.ActivityMainBinding
 
 //@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)

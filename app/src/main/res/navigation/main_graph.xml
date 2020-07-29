@@ -10,15 +10,31 @@
 		android:name="ru.bmstu.iu9.vrsocialnetwork.ui.home.HomeFragment"
 		android:label="HomeFragment"
 		tools:layout="@layout/fragment_home"/>
+	<action
+		android:id="@+id/action_global_home_fragment"
+		app:destination="@id/homeFragment"/>
+
 	<fragment
 		android:id="@+id/cameraFragment"
 		android:name="ru.bmstu.iu9.vrsocialnetwork.ui.camera.CameraFragment"
 		android:label="CameraFragment"
-		tools:layout="@layout/camera_preview"/>
-	<!--	<action-->
-<!--		android:id="@+id/action_global_homeFragment"-->
-<!--		app:destination="@id/homeFragment"-->
-<!--		app:launchSingleTop="true"-->
-<!--		app:popUpTo="@navigation/main_graph"-->
-<!--		app:popUpToInclusive="true"/>-->
+		tools:layout="@layout/camera_preview">
+		<action
+			android:id="@+id/action_cameraFragment_to_postPreviewFragment"
+			app:destination="@id/postPreviewFragment" />
+	</fragment>
+	<action
+		android:id="@+id/action_global_camera_fragment"
+		app:destination="@id/cameraFragment"/>
+
+	<fragment
+		android:id="@+id/postPreviewFragment"
+		android:name="ru.bmstu.iu9.vrsocialnetwork.ui.preview.PostPreviewFragment"
+		android:label="fragment_post_preview"
+		tools:layout="@layout/fragment_post_preview" >
+		<argument
+			android:name="filePath"
+			app:argType="string"
+			app:nullable="true"/>
+	</fragment>
 </navigation>

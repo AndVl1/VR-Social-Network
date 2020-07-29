@@ -1,6 +1,7 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class HomeFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
+		Log.d(TAG, "onCreateView")
 		if (mRoot == null) {
 			mRoot = inflater.inflate(R.layout.fragment_home, container, false)
 		}
@@ -51,5 +53,9 @@ class HomeFragment : Fragment() {
 		val adapter = FeedPagedAdapter()
 		mRecyclerView?.layoutManager = mLinearLayoutManager
 		mRecyclerView?.adapter = adapter
+	}
+
+	companion object {
+		const val TAG = "HOME FRAGMENT"
 	}
 }
