@@ -14,6 +14,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.android.material.bottomappbar.BottomAppBar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.bottom_test.*
 import ru.bmstu.iu9.vrsocialnetwork.R
 import ru.bmstu.iu9.vrsocialnetwork.databinding.BottomTestBinding
 import ru.bmstu.iu9.vrsocialnetwork.ui.camera.CameraFragmentDirections
@@ -74,6 +75,8 @@ class Main2Activity: AppCompatActivity(), NavController.OnDestinationChangedList
 		val directions = CameraFragmentDirections.actionGlobalCameraFragment()
 		findNavController(R.id.nav_host_fragment2).navigate(directions)
 	}
+
+	private fun navigateToAuth() {}
 
 	private fun setupBottomABForHome() {
 		showAppBar()
@@ -143,6 +146,16 @@ class Main2Activity: AppCompatActivity(), NavController.OnDestinationChangedList
 			R.id.cameraFragment -> {
 				Log.d(TAG, "cameraFragment")
 				setupBottomABForCamera()
+			}
+			R.id.splashScreenFragment -> {
+				Log.d(TAG, "splashScreenFragment")
+				hideBottomAppBar()
+				fab.hide()
+			}
+			R.id.loginFragment -> {
+				Log.d(TAG, "loginFragment")
+				hideBottomAppBar()
+				fab.hide()
 			}
 		}
 	}

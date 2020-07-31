@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import ru.bmstu.iu9.vrsocialnetwork.R
-import ru.bmstu.iu9.vrsocialnetwork.ui.preview.PostPreviewFragmentDirections
 import java.io.File
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -29,6 +27,8 @@ class CameraFragment : Fragment() {
 	private var mPreviewView : PreviewView? = null
 	private var mCaptureView : CardView? = null
 	private var mImageCapture: ImageCapture? = null
+//	private var mVideoCapture: VideoCapture? = null
+	private var mImageAnalyzer: ImageAnalysis? = null
 	private var mPreview: Preview? = null
 	private var mCamera: Camera? = null
 	private lateinit var mOutputDirectory: File
@@ -60,8 +60,7 @@ class CameraFragment : Fragment() {
 	}
 
 	private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-		ContextCompat.checkSelfPermission(activity?.applicationContext!!, it) == PackageManager.PERMISSION_GRANTED
-		// TODO replace activity.applicationContext
+		ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
 	}
 
 	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -69,34 +68,52 @@ class CameraFragment : Fragment() {
 			if (allPermissionsGranted()) {
 				startCamera()
 			} else {
-				Toast.makeText(activity?.applicationContext, getString(R.string.camera_permissions_error), Toast.LENGTH_SHORT).show()
+				Toast.makeText(requireContext(), getString(R.string.camera_permissions_error), Toast.LENGTH_SHORT).show()
 			}
 		}
 	}
 
 	private fun startCamera() {
-		val cameraProviderFuture = ProcessCameraProvider.getInstance(activity?.applicationContext!!) // TODO replace
+		val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext()) // TODO replace
 
 		cameraProviderFuture.addListener( Runnable {
 			val cameraProvider : ProcessCameraProvider = cameraProviderFuture.get()
 
 			mPreview = Preview.Builder().build()
-			val cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+
+			mImageCapture = ImageCapture.Builder()
+				.build()
+//			mVideoCapture = VideoCapture.Builder().apply {
+//
+//			}.build()
+
+			val cameraSelector = CameraSelector.Builder()
+				.requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+				.build()
 
 			try {
 				cameraProvider.unbindAll()
-				mCamera = cameraProvider.bindToLifecycle(this, cameraSelector, mPreview)
+				mCamera = cameraProvider.bindToLifecycle(this, cameraSelector, mPreview, mImageCapture)
 				mPreview?.setSurfaceProvider(mPreviewView?.createSurfaceProvider())
 			} catch (e: Exception) {
 				Log.e(TAG, e.localizedMessage!!)
 			}
-		}, ContextCompat.getMainExecutor(activity?.applicationContext))
+		}, ContextCompat.getMainExecutor(requireContext()))
 	}
 
-	fun getOutputDirectory(): File = File(
-		MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString()
-	)
+	private fun getOutputDirectory(): File {
+		val mediaDir = requireContext().externalMediaDirs
+			.firstOrNull()?.let {
+				File(it, resources.getString(R.string.app_name)).apply {
+					mkdirs()
+				}
+			}
+		return mediaDir!!
+	}
 
+//	private fun captureVideo() {
+//		val videoCapture = mVideoCapture ?: return
+//	}
 
 	private fun takePhoto() {
 		val imageCapture = mImageCapture ?: return
@@ -109,12 +126,17 @@ class CameraFragment : Fragment() {
 		val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
 		imageCapture.takePicture(
-			outputOptions, ContextCompat.getMainExecutor(activity), object : ImageCapture.OnImageSavedCallback {
+			outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
 				override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
 					val savedUri = Uri.fromFile(photoFile)
 					val msg = "Photo at $savedUri"
-					Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-					navigateToNext()
+					Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+					if (savedUri.path != null) {
+						navigateToNext(savedUri?.path ?: "")
+					} else {
+						Toast.makeText(requireContext(), "Image not saved", Toast.LENGTH_SHORT).show()
+						Log.e(TAG, "Image npt saved")
+					}
 				}
 
 				override fun onError(exception: ImageCaptureException) {
@@ -125,12 +147,11 @@ class CameraFragment : Fragment() {
 		)
 	}
 
-	private fun navigateToNext() {
-//		val direction = CameraFragmentDirections.actionCameraFragmentToPostPreviewFragment(
-//
-//		)
-//
-//		findNavController().navigate(direction)
+	private fun navigateToNext(path: String) {
+		val direction = CameraFragmentDirections.actionCameraFragmentToPostPreviewFragment(
+			filePath = path
+		)
+		findNavController().navigate(direction)
 	}
 
 	companion object{
@@ -138,5 +159,6 @@ class CameraFragment : Fragment() {
 		private const val REQUEST_CODE_PERMISSION = 1111
 		const val TAG = "CAMERA PREVIEW"
 		private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+		private const val BURST_FRAMERATE = 10
 	}
 }

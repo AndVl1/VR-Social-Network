@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.FragmentScoped
 import ru.bmstu.iu9.vrsocialnetwork.R
 import javax.inject.Inject
 
@@ -22,7 +24,7 @@ class HomeFragment : Fragment() {
 	private var mLinearLayoutManager : LinearLayoutManager? = null
 	private var mRoot: View? = null
 
-	private val homeViewModel: HomeViewModel by viewModels()
+	private val homeViewModel by viewModels<HomeViewModel>()
 	private val postsAdapter = FeedPagedAdapter()
 
 	override fun onCreateView(
@@ -36,7 +38,7 @@ class HomeFragment : Fragment() {
 		}
 
 		initializeList()
-//		observeLiveData()
+		observeLiveData()
 
 		return mRoot
 	}
