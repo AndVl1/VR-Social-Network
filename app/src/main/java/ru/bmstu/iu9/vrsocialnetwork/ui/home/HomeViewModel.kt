@@ -1,5 +1,6 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui.home
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -20,10 +21,10 @@ class HomeViewModel @ViewModelInject constructor(
 	init {
 		val config = PagedList.Config.Builder()
 			.setPageSize(30)
-			.setEnablePlaceholders(false)
 			.build()
 //		postsLiveData = initializedPagedListBuilder(config).build()
-		postsLiveData = LivePagedListBuilder(mainRepository.getLoadedPosts(), config).build()
+		postsLiveData = LivePagedListBuilder(mainRepository.getLoadedPosts(viewModelScope), 20).build()
+		Log.d(TAG, postsLiveData.value?.size?.toString() ?: "none")
 	}
 
 	fun getPosts(): LiveData<PagedList<Post>> = postsLiveData
@@ -37,4 +38,8 @@ class HomeViewModel @ViewModelInject constructor(
 		return LivePagedListBuilder<String, Post>(dataSourceFactory, config)
 	}
 //	val mPosts = LivePagedListBuilder(mainRepository.getPostsAsDataSource(), 20).build()
+
+	companion object {
+		private const val TAG = "HOME VM"
+	}
 }

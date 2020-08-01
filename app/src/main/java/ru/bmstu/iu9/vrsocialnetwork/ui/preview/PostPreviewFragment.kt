@@ -51,7 +51,7 @@ class PostPreviewFragment: Fragment() {
 	}
 
 	private fun navigateHome() {
-		val direction = HomeFragmentDirections.actionGlobalHomeFragment()
+		val direction = PostPreviewFragmentDirections.actionPostPreviewFragmentToHomeFragment()
 		findNavController().navigate(direction)
 	}
 

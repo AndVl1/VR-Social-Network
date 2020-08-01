@@ -29,10 +29,13 @@
 		android:id="@+id/homeFragment"
 		android:name="ru.bmstu.iu9.vrsocialnetwork.ui.home.HomeFragment"
 		android:label="HomeFragment"
-		tools:layout="@layout/fragment_home"/>
-	<action
-		android:id="@+id/action_global_home_fragment"
-		app:destination="@id/homeFragment"/>
+		tools:layout="@layout/fragment_home">
+		<action
+			android:id="@+id/action_homeFragment_to_cameraFragment"
+			app:popUpTo="@id/homeFragment"
+			app:popUpToInclusive="true"
+			app:destination="@id/cameraFragment" />
+	</fragment>
 
 	<fragment
 		android:id="@+id/cameraFragment"
@@ -41,11 +44,10 @@
 		tools:layout="@layout/camera_preview">
 		<action
 			android:id="@+id/action_cameraFragment_to_postPreviewFragment"
+			app:popUpTo="@id/cameraFragment"
+			app:popUpToInclusive="true"
 			app:destination="@id/postPreviewFragment" />
 	</fragment>
-	<action
-		android:id="@+id/action_global_camera_fragment"
-		app:destination="@id/cameraFragment"/>
 
 	<fragment
 		android:id="@+id/postPreviewFragment"
@@ -56,6 +58,11 @@
 			android:name="filePath"
 			app:argType="string"
 			app:nullable="false"/>
+		<action
+			android:id="@+id/action_postPreviewFragment_to_homeFragment"
+			app:popUpTo="@id/postPreviewFragment"
+			app:popUpToInclusive="true"
+			app:destination="@id/homeFragment" />
 	</fragment>
 	<fragment
 		android:id="@+id/loginFragment"

@@ -12,6 +12,9 @@ interface PostsDao {
     @Query("SELECT * FROM posts ORDER BY id")
     fun loadAllAsDataSource(): DataSource.Factory<Int, Post>
 
+    @Query("SELECT * FROM posts ORDER BY id")
+    suspend fun loadAll(): List<Post>
+
     @Query("DELETE FROM posts")
     suspend fun clear()
 

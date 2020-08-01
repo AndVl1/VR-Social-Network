@@ -64,19 +64,11 @@ class Main2Activity: AppCompatActivity(), NavController.OnDestinationChangedList
 		}
 	}
 
-	private fun navigateToHome() {
-		setupBottomABForHome()
-		val directions = HomeFragmentDirections.actionGlobalCameraFragment()
-		findNavController(R.id.nav_host_fragment2).navigate(directions)
-	}
-
 	private fun navigateToCamera() {
 		setupBottomABForCamera()
-		val directions = CameraFragmentDirections.actionGlobalCameraFragment()
+		val directions = HomeFragmentDirections.actionHomeFragmentToCameraFragment()
 		findNavController(R.id.nav_host_fragment2).navigate(directions)
 	}
-
-	private fun navigateToAuth() {}
 
 	private fun setupBottomABForHome() {
 		showAppBar()

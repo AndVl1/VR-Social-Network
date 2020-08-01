@@ -1,6 +1,8 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui.splash
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +27,8 @@ class SplashFragment: Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
+		Log.d(TAG, "${Build.BRAND} ${Build.MODEL} TODO send model to back")
+
 		mViewModel.checkIfUserIsAuthenticated()
 		mViewModel.isUserAuthenticatedLiveData.observe(viewLifecycleOwner, Observer {
 			if (!it.isAuthenticated!!) {
@@ -45,4 +49,7 @@ class SplashFragment: Fragment() {
 		findNavController().navigate(directions)
 	}
 
+	companion object {
+		private const val TAG = "SPLASH"
+	}
 }

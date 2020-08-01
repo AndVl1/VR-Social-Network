@@ -8,14 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.FragmentScoped
 import ru.bmstu.iu9.vrsocialnetwork.R
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -38,7 +34,7 @@ class HomeFragment : Fragment() {
 		}
 
 		initializeList()
-		observeLiveData()
+//		observeLiveData()
 
 		return mRoot
 	}
@@ -54,6 +50,7 @@ class HomeFragment : Fragment() {
 		mLinearLayoutManager = LinearLayoutManager(this.context)
 		val adapter = FeedPagedAdapter()
 		mRecyclerView?.layoutManager = mLinearLayoutManager
+		observeLiveData()
 		mRecyclerView?.adapter = adapter
 	}
 
