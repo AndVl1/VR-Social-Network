@@ -18,13 +18,14 @@ class FeedHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
 	fun bind(post: Post) {
 		with(post) {
-			if (imageLink != null) {
+			if (imageLink != "") {
 				mPostView.post_profile_image.load(imageLink)
 				mPostView.post_profile_image.visibility = View.VISIBLE
 			} else {
-				mPostView.post_profile_image.visibility = View.INVISIBLE
+				mPostView.post_profile_image.load(mPostView.context.getDrawable(R.drawable.baseline_face_black_18dp))
 			}
 			mPostView.post_nickname.text = authorName
+			mPostView.post_image.load(post.imageLink)
 		}
 	}
 }
