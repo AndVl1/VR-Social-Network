@@ -12,9 +12,9 @@ data class Post (
 	@SerializedName("name")
 	val authorName: String,
 	@SerializedName("profileImage")
-	val profileImageLink: String?,
+	val profileImageLink: String,
 	@SerializedName("text")
 	val text: String,
 	@SerializedName("image")
-	val imageLink: String?
+	val imageLink: String
 )

@@ -1,5 +1,6 @@
 package ru.bmstu.iu9.vrsocialnetwork.data.room
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Delete
@@ -13,7 +14,7 @@ interface PostsDao {
     fun loadAllAsDataSource(): DataSource.Factory<Int, Post>
 
     @Query("SELECT * FROM posts ORDER BY id")
-    suspend fun loadAll(): List<Post>
+    suspend fun loadAll(): LiveData<List<Post>>
 
     @Query("DELETE FROM posts")
     suspend fun clear()

@@ -122,7 +122,7 @@ dependencies {
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinCoroutineVersion"
 
 	//Paging
-	implementation "android.arch.paging:runtime:$pagingVersion"
+	implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
 
 
 	testImplementation 'junit:junit:4.13'

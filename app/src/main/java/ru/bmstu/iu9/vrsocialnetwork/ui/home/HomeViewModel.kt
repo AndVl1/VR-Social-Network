@@ -20,10 +20,13 @@ class HomeViewModel @ViewModelInject constructor(
 
 	init {
 		val config = PagedList.Config.Builder()
-			.setPageSize(30)
+			.setPageSize(20)
 			.build()
 //		postsLiveData = initializedPagedListBuilder(config).build()
-		postsLiveData = LivePagedListBuilder(mainRepository.getLoadedPosts(viewModelScope), 20).build()
+		postsLiveData = LivePagedListBuilder(
+			mainRepository.getLoadedPosts(), config
+		).build()
+
 		Log.d(TAG, postsLiveData.value?.size?.toString() ?: "none")
 	}
 

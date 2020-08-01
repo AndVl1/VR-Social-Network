@@ -13,13 +13,16 @@ class MainRepository @Inject constructor(private val mApiService: ApiService, pr
 	suspend fun getPosts() = mApiService.fetchPosts()
 //	fun getLoadedPosts() = mPostsDao.loadAllAsDataSource()
 
-	fun getLoadedPosts(scope: CoroutineScope) : DataSource.Factory<Int, Post> {
-		scope.launch {
-			val posts = mPostsDao.loadAll()
-			Log.d(TAG, "${posts.size}")
-		}
+	fun getLoadedPosts() : DataSource.Factory<Int, Post> {
 		return mPostsDao.loadAllAsDataSource()
 	}
+
+	suspend fun getLoadedPostsLD(scope: CoroutineScope) {
+		scope.launch {
+			mPostsDao.loadAll()
+		}
+	}
+
 	suspend fun addPost(post: Post) {
 		mPostsDao.insert(post)
 	}
