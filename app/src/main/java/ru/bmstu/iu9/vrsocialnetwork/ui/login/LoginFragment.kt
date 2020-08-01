@@ -70,6 +70,9 @@ class LoginFragment : Fragment() {
 				}
 			}catch (e: ApiException) {
 				Log.e(TAG, e.message)
+				if (e.message == "10") {
+					Toast.makeText(requireContext(), getString(R.string.firebase_exception), Toast.LENGTH_SHORT).show()
+				}
 			}
 		}
 	}
