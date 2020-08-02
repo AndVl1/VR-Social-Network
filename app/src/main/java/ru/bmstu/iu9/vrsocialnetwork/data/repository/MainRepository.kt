@@ -36,31 +36,33 @@ class MainRepository @Inject constructor(
 		}
 	}
 
-	suspend fun addPost(post: Post, scope: CoroutineScope): MutableLiveData<Boolean> {
+	suspend fun addPost(post: Post, scope: CoroutineScope): Boolean {
 		return withContext(scope.coroutineContext) {
 			mIOScope.launch {
 				mPostsDao.insert(post)
 			}.join()
 			val file = Uri.fromFile(File(post.imageLink))
-			val res = MutableLiveData<Boolean>()
+			var res: Boolean
 			try {
-				var link = ""
+				var link: String
 				mIOScope.launch {
+
 					val ref = mStorage.reference
 						.child("posts/${file.lastPathSegment}")
 
 					ref.putFile(file)
 						.await()
 
-//					link = ref.downloadUrl.result.toString()
-//					post.imageLink = link
-				}.join()
+					link = ref.downloadUrl.await().encodedPath.toString()
 
+					post.imageLink = link
+					Log.d(TAG, post.toString())
+				}.join()
+				res = true
 			} catch (e: Exception) {
-				Log.e(TAG, e.message)
-				res.value = false
+				Log.e(TAG, e.message ?: "err")
+				res = false
 			}
-			res.value = true
 			res
 		}
 	}
