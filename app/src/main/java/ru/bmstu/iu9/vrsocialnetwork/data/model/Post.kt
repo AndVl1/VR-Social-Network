@@ -16,5 +16,5 @@ data class Post (
 	@SerializedName("text")
 	val text: String,
 	@SerializedName("image")
-	val imageLink: String
+	var imageLink: String
 )

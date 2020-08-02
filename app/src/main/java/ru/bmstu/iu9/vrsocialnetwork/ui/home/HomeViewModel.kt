@@ -27,7 +27,7 @@ class HomeViewModel @ViewModelInject constructor(
 			mainRepository.getLoadedPosts(), config
 		).build()
 
-		Log.d(TAG, postsLiveData.value?.size?.toString() ?: "none")
+		Log.d(TAG, "${postsLiveData.value?.size}")
 	}
 
 	fun getPosts(): LiveData<PagedList<Post>> = postsLiveData

@@ -5,15 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import coil.api.load
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import ru.bmstu.iu9.vrsocialnetwork.R
 import ru.bmstu.iu9.vrsocialnetwork.ui.home.HomeFragmentDirections
 import java.io.File
@@ -39,9 +41,25 @@ class PostPreviewFragment: Fragment() {
 		imagePreview.load(File(mNavArgs.filePath))
 		view.findViewById<Button>(R.id.preview_submitButton)
 			.setOnClickListener {
-				mViewModel.savePost(mNavArgs.filePath)
-				// TODO navigate home after successful uploading
-				navigateHome()
+				view.findViewById<ProgressBar>(R.id.uploading_progress)
+					.visibility = View.VISIBLE
+
+				viewLifecycleOwner.lifecycleScope.launch {
+					mViewModel.savePost(mNavArgs.filePath)
+					// TODO navigate home after successful uploading
+					mViewModel.mCompleteLiveData.observe(viewLifecycleOwner, Observer {
+						if (it == true) {
+							navigateHome()
+						} else if (it == false) {
+							Toast.makeText(
+								requireContext(),
+								getString(R.string.error_storage),
+								Toast.LENGTH_SHORT
+							).show()
+						}
+						Log.d(TAG, it.toString())
+					})
+				}
 			}
 		view.findViewById<Button>(R.id.preview_retryButton)
 			.setOnClickListener {
