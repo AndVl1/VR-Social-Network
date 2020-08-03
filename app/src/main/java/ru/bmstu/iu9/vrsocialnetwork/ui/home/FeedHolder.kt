@@ -1,5 +1,6 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui.home
 
+import android.util.Log
 import android.view.View
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -7,6 +8,7 @@ import coil.api.load
 import kotlinx.android.synthetic.main.post.view.*
 import ru.bmstu.iu9.vrsocialnetwork.R
 import ru.bmstu.iu9.vrsocialnetwork.data.model.Post
+import java.io.File
 
 class FeedHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 	var mPostView: CardView = itemView.findViewById(R.id.post_card)
@@ -18,14 +20,19 @@ class FeedHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
 	fun bind(post: Post) {
 		with(post) {
-			if (imageLink != "") {
-				mPostView.post_profile_image.load(imageLink)
+			if (profileImageLink != "") {
+				mPostView.post_profile_image.load(profileImageLink)
 				mPostView.post_profile_image.visibility = View.VISIBLE
 			} else {
 				mPostView.post_profile_image.load(mPostView.context.getDrawable(R.drawable.baseline_face_black_18dp))
 			}
 			mPostView.post_nickname.text = authorName
-			mPostView.post_image.load(post.imageLink)
+			Log.d(TAG, imageLink)
+			mPostView.post_image.load(File(imageLink))
 		}
+	}
+
+	companion object {
+		private const val TAG = "FEED HOLDER"
 	}
 }

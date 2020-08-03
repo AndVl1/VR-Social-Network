@@ -17,6 +17,7 @@ class HomeViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 	var postsLiveData: LiveData<PagedList<Post>>
 	val dataSource = PostsDataSource(mainRepository, viewModelScope)
+	val mPostsList = LivePagedListBuilder(mainRepository.getLoadedPosts(), 20).build()
 
 	init {
 		val config = PagedList.Config.Builder()

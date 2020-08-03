@@ -1,6 +1,5 @@
 package ru.bmstu.iu9.vrsocialnetwork.data.room
 
-import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Delete

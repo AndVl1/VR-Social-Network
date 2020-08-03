@@ -21,7 +21,6 @@ class HomeFragment : Fragment() {
 	private var mRoot: View? = null
 
 	private val homeViewModel by viewModels<HomeViewModel>()
-	private val postsAdapter = FeedPagedAdapter()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -39,18 +38,14 @@ class HomeFragment : Fragment() {
 		return mRoot
 	}
 
-	private fun observeLiveData() {
-		homeViewModel.getPosts().observe(viewLifecycleOwner, Observer {
-			postsAdapter.submitList(it)
-		})
-	}
-
 	private fun initializeList() {
 		mRecyclerView = mRoot?.findViewById(R.id.recyclerContainer)
 		mLinearLayoutManager = LinearLayoutManager(this.context)
 		val adapter = FeedPagedAdapter()
 		mRecyclerView?.layoutManager = mLinearLayoutManager
-		observeLiveData()
+		homeViewModel.mPostsList.observe(viewLifecycleOwner, Observer {
+			adapter.submitList(it)
+		})
 		mRecyclerView?.adapter = adapter
 	}
 

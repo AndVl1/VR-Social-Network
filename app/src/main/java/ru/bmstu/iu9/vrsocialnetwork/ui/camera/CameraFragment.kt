@@ -1,15 +1,19 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui.camera
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.camera.core.*
+import androidx.camera.core.impl.VideoCaptureConfig
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.cardview.widget.CardView
@@ -22,17 +26,19 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("RestrictedApi")
 class CameraFragment : Fragment() {
 	var mRoot: View? = null
 	private var mPreviewView : PreviewView? = null
 	private var mCaptureView : CardView? = null
 	private var mImageCapture: ImageCapture? = null
-//	private var mVideoCapture: VideoCapture? = null
-	private var mImageAnalyzer: ImageAnalysis? = null
+	private var mVideoCapture: VideoCapture? = null
 	private var mPreview: Preview? = null
 	private var mCamera: Camera? = null
+	private var mVideoFile: File? = null
 	private lateinit var mOutputDirectory: File
 
+	@SuppressLint("ClickableViewAccessibility")
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -56,6 +62,31 @@ class CameraFragment : Fragment() {
 			takePhoto()
 		}
 
+//		mCaptureView?.setOnTouchListener { _, event ->
+//			if (event.action == MotionEvent.ACTION_DOWN) {
+//				mCaptureView?.setCardBackgroundColor(Color.GREEN)
+//				mVideoCapture?.startRecording(mVideoFile, object : VideoCapture.OnVideoSavedCallback{
+//					override fun onVideoSaved(file: File) {
+//						Log.i(TAG, "$file")
+//					}
+//
+//					override fun onError(
+//						videoCaptureError: Int,
+//						message: String,
+//						cause: Throwable?
+//					) {
+//						Log.e(TAG, message)
+//					}
+//
+//				})
+//			} else if (event.action == MotionEvent.ACTION_UP) {
+//				mCaptureView?.setCardBackgroundColor(Color.WHITE)
+//				mVideoCapture?.stopRecording()
+//				Log.d(TAG, "recording stopped")
+//			}
+//			false
+//		}
+
 		return mRoot
 	}
 
@@ -73,8 +104,15 @@ class CameraFragment : Fragment() {
 		}
 	}
 
+//	private fun startCameraForVideo() {
+//		val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+//
+//		val cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_FRONT).build()
+//		val videoCaptureConfig = VideoCaptureConfig()
+//	}
+
 	private fun startCamera() {
-		val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext()) // TODO replace
+		val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
 		cameraProviderFuture.addListener( Runnable {
 			val cameraProvider : ProcessCameraProvider = cameraProviderFuture.get()
@@ -83,9 +121,6 @@ class CameraFragment : Fragment() {
 
 			mImageCapture = ImageCapture.Builder()
 				.build()
-//			mVideoCapture = VideoCapture.Builder().apply {
-//
-//			}.build()
 
 			val cameraSelector = CameraSelector.Builder()
 				.requireLensFacing(CameraSelector.LENS_FACING_FRONT)
@@ -112,7 +147,16 @@ class CameraFragment : Fragment() {
 	}
 
 //	private fun captureVideo() {
-//		val videoCapture = mVideoCapture ?: return
+//
+//
+//		val videoFile = File(
+//			mOutputDirectory,
+//			SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+//				.format(System.currentTimeMillis()) + ".mp4"
+//		)
+////		val outputOptions = VideoCapture.
+//
+//		mVideoCapture.
 //	}
 
 	private fun takePhoto() {

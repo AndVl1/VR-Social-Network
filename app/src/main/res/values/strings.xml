@@ -28,4 +28,6 @@
 	<string name="login_google">Login with Google</string>
 	<string name="firebase_exception">Your debug SHA key isn\'t connected to Firebase</string>
 	<string name="error_storage">Error while uploading</string>
+	<string name="stop_recording">Stop</string>
+	<string name="post_image">Image associated with post</string>
 </resources>
