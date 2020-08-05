@@ -52,22 +52,13 @@
 
 		</androidx.cardview.widget.CardView>
 
-		<androidx.cardview.widget.CardView
-			android:id="@+id/video_stop"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			app:cardBackgroundColor="@color/white"
-			android:visibility="gone"
-			app:cardCornerRadius="18dp">
-
-			<TextView
+			<Button
+				android:id="@+id/camera_stop"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/stop_recording"
-				android:textSize="50sp"/>
-<!--			TODO replace with image -->
-		</androidx.cardview.widget.CardView>
+				android:visibility="gone"
+				android:textSize="20sp"/>
 
 	</LinearLayout>
 

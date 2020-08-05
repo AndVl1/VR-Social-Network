@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.impl.VideoCaptureConfig
@@ -20,35 +21,33 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import ru.bmstu.iu9.vrsocialnetwork.R
 import java.io.File
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-@SuppressLint("RestrictedApi")
 class CameraFragment : Fragment() {
-	var mRoot: View? = null
 	private var mPreviewView : PreviewView? = null
 	private var mCaptureView : CardView? = null
 	private var mImageCapture: ImageCapture? = null
-	private var mVideoCapture: VideoCapture? = null
 	private var mPreview: Preview? = null
 	private var mCamera: Camera? = null
-	private var mVideoFile: File? = null
 	private lateinit var mOutputDirectory: File
+	private var mCount = 0
 
-	@SuppressLint("ClickableViewAccessibility")
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
-	): View? {
-		if (mRoot == null)
-			mRoot = inflater.inflate(R.layout.camera_preview, container, false)
+	): View?  = inflater.inflate(R.layout.camera_preview, container, false)
 
-		mPreviewView = mRoot?.findViewById(R.id.camera_captureView)
-		mCaptureView = mRoot?.findViewById(R.id.camera_capture)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+
+		mPreviewView = view.findViewById(R.id.camera_captureView)
+		mCaptureView = view.findViewById(R.id.camera_capture)
 
 		mOutputDirectory = getOutputDirectory()
 
@@ -57,37 +56,19 @@ class CameraFragment : Fragment() {
 		} else {
 			requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION)
 		}
+		val stopButton: Button = view.findViewById(R.id.camera_stop)
 
 		mCaptureView?.setOnClickListener {
 			takePhoto()
+			mCount++
+			if (mCount >= 10) {
+				stopButton.visibility = View.VISIBLE
+			}
 		}
 
-//		mCaptureView?.setOnTouchListener { _, event ->
-//			if (event.action == MotionEvent.ACTION_DOWN) {
-//				mCaptureView?.setCardBackgroundColor(Color.GREEN)
-//				mVideoCapture?.startRecording(mVideoFile, object : VideoCapture.OnVideoSavedCallback{
-//					override fun onVideoSaved(file: File) {
-//						Log.i(TAG, "$file")
-//					}
-//
-//					override fun onError(
-//						videoCaptureError: Int,
-//						message: String,
-//						cause: Throwable?
-//					) {
-//						Log.e(TAG, message)
-//					}
-//
-//				})
-//			} else if (event.action == MotionEvent.ACTION_UP) {
-//				mCaptureView?.setCardBackgroundColor(Color.WHITE)
-//				mVideoCapture?.stopRecording()
-//				Log.d(TAG, "recording stopped")
-//			}
-//			false
-//		}
-
-		return mRoot
+		stopButton.setOnClickListener {
+			navigateToNext(Uri.fromFile(mOutputDirectory).path.toString())
+		}
 	}
 
 	private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -103,13 +84,6 @@ class CameraFragment : Fragment() {
 			}
 		}
 	}
-
-//	private fun startCameraForVideo() {
-//		val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
-//
-//		val cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_FRONT).build()
-//		val videoCaptureConfig = VideoCaptureConfig()
-//	}
 
 	private fun startCamera() {
 		val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
@@ -137,35 +111,24 @@ class CameraFragment : Fragment() {
 	}
 
 	private fun getOutputDirectory(): File {
+		val dirName = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+			.format(System.currentTimeMillis())
+
 		val mediaDir = requireContext().externalMediaDirs
 			.firstOrNull()?.let {
-				File(it, resources.getString(R.string.app_name)).apply {
+				File(it, "${resources.getString(R.string.app_name)}/${dirName}").apply {
 					mkdirs()
 				}
 			}
 		return mediaDir!!
 	}
 
-//	private fun captureVideo() {
-//
-//
-//		val videoFile = File(
-//			mOutputDirectory,
-//			SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-//				.format(System.currentTimeMillis()) + ".mp4"
-//		)
-////		val outputOptions = VideoCapture.
-//
-//		mVideoCapture.
-//	}
-
 	private fun takePhoto() {
 		val imageCapture = mImageCapture ?: return
 
 		val photoFile = File(
 			mOutputDirectory,
-			SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-				.format(System.currentTimeMillis()) + ".jpg"
+			"${mCount}.jpg"
 		)
 		val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
@@ -173,10 +136,8 @@ class CameraFragment : Fragment() {
 			outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
 				override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
 					val savedUri = Uri.fromFile(photoFile)
-					val msg = "Photo at $savedUri"
-					Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
 					if (savedUri.path != null) {
-						navigateToNext(savedUri?.path ?: "")
+						Log.d(TAG, savedUri?.path ?: "")
 					} else {
 						Toast.makeText(requireContext(), "Image not saved", Toast.LENGTH_SHORT).show()
 						Log.e(TAG, "Image npt saved")

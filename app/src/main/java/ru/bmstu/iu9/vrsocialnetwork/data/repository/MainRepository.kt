@@ -2,7 +2,6 @@ package ru.bmstu.iu9.vrsocialnetwork.data.repository
 
 import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
@@ -41,21 +40,23 @@ class MainRepository @Inject constructor(
 			mIOScope.launch {
 				mPostsDao.insert(post)
 			}.join()
-			val file = Uri.fromFile(File(post.imageLink))
+			val folder = File(post.imageLink)
 			var res: Boolean
 			try {
 				var link: String
 				mIOScope.launch {
 
 					val ref = mStorage.reference
-						.child("posts/${file.lastPathSegment}")
+						.child("userPhotos/")
+						.child("${folder.name}/")
 
-					ref.putFile(file)
-						.await()
+					for (file in folder.listFiles()) {
+						val dest = ref.child(file.name)
+						dest.putFile(Uri.fromFile(file))
+							.await()
+					}
 
-					link = ref.downloadUrl.await().encodedPath.toString()
-
-					post.imageLink = link
+					post.imageLink = "userPhotos/${folder.name}"
 					Log.d(TAG, post.toString())
 				}.join()
 				res = true
