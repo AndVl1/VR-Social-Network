@@ -24,11 +24,11 @@ class PostPreviewViewModel @ViewModelInject constructor(
 		mCompleteLiveData = liveData(viewModelScope.coroutineContext) {
 			emit(mMainRepository.addPost(
 				Post(
-					0,
-					mAuth.currentUser?.displayName ?: "",
-					"",
-					"test",
-					path
+					id = 0,
+					authorID = mAuth.currentUser?.uid ?: "",
+					authorName = mAuth.currentUser?.displayName ?: "",
+					text = "",
+					imageLink = path
 				),
 				viewModelScope
 			))

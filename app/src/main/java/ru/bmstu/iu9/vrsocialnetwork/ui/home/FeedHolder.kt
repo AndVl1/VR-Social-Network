@@ -20,15 +20,12 @@ class FeedHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
 	fun bind(post: Post) {
 		with(post) {
-			if (profileImageLink != "") {
-				mPostView.post_profile_image.load(profileImageLink)
-				mPostView.post_profile_image.visibility = View.VISIBLE
-			} else {
-				mPostView.post_profile_image.load(mPostView.context.getDrawable(R.drawable.baseline_face_black_18dp))
-			}
+
+			mPostView.post_profile_image.load(mPostView.context.getDrawable(R.drawable.baseline_face_black_18dp))
+
 			mPostView.post_nickname.text = authorName
 			Log.d(TAG, imageLink)
-			mPostView.post_image.load(File(imageLink))
+//			mPostView.post_image.load(File(imageLink))
 		}
 	}
 

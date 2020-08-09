@@ -58,6 +58,11 @@ class MainRepository @Inject constructor(
 
 					post.imageLink = "userPhotos/${folder.name}"
 					Log.d(TAG, post.toString())
+					try {
+						mApiService.addPost(post)
+					} catch (e: Exception) {
+						e.printStackTrace()
+					}
 				}.join()
 				res = true
 			} catch (e: Exception) {

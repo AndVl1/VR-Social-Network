@@ -9,10 +9,10 @@ data class Post (
 	@PrimaryKey(autoGenerate = true)
 	@SerializedName("id")
 	val id: Long,
+	@SerializedName("authorId")
+	var authorID: String,
 	@SerializedName("name")
 	val authorName: String,
-	@SerializedName("profileImage")
-	val profileImageLink: String,
 	@SerializedName("text")
 	val text: String,
 	@SerializedName("image")
