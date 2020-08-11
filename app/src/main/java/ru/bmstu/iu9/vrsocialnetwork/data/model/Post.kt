@@ -11,10 +11,10 @@ data class Post (
 	val id: Long,
 	@SerializedName("authorId")
 	var authorID: String,
-	@SerializedName("name")
+	@SerializedName("authorName")
 	val authorName: String,
 	@SerializedName("text")
 	val text: String,
-	@SerializedName("image")
+	@SerializedName("imageLink")
 	var imageLink: String
 )

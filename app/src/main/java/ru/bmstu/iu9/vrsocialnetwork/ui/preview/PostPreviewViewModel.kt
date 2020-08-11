@@ -19,8 +19,7 @@ class PostPreviewViewModel @ViewModelInject constructor(
 	private val mAuth = FirebaseAuth.getInstance()
 	lateinit var mCompleteLiveData : LiveData<Boolean>
 
-	fun savePost(path: String) { // TODO add firebaseAuth user
-		Log.d(TAG, "test1")
+	fun savePost(path: String) {
 		mCompleteLiveData = liveData(viewModelScope.coroutineContext) {
 			emit(mMainRepository.addPost(
 				Post(
@@ -33,7 +32,6 @@ class PostPreviewViewModel @ViewModelInject constructor(
 				viewModelScope
 			))
 		}
-		Log.d(TAG, "test3")
 	}
 
 	companion object {
