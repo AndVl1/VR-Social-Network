@@ -54,6 +54,10 @@
 			android:name="filePath"
 			app:argType="string"
 			app:nullable="false"/>
+		<argument
+			android:name="sensorMap"
+			app:argType="ru.bmstu.iu9.vrsocialnetwork.data.SensorMap"
+			app:nullable="false"/>
 		<action
 			android:id="@+id/action_postPreviewFragment_to_homeFragment"
 			app:popUpTo="@id/main_graph"

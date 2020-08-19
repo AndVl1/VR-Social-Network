@@ -8,6 +8,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import ru.bmstu.iu9.vrsocialnetwork.data.model.ApiResponse
 import ru.bmstu.iu9.vrsocialnetwork.data.model.Post
+import ru.bmstu.iu9.vrsocialnetwork.data.model.PostModel
 import ru.bmstu.iu9.vrsocialnetwork.data.model.User
 
 interface ApiService {
@@ -21,4 +22,7 @@ interface ApiService {
 
 	@POST("/posts")
 	suspend fun addPost(@Body post: Post): Call<User>
+
+	@POST("/models")
+	suspend fun addModel(@Body model: PostModel): Call<Int>
 }

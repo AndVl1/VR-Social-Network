@@ -49,8 +49,8 @@ class PostPreviewFragment: Fragment() {
 					.visibility = View.VISIBLE
 
 				viewLifecycleOwner.lifecycleScope.launch {
-					mViewModel.savePost(mNavArgs.filePath)
-					mViewModel.mCompleteLiveData.observe(viewLifecycleOwner, Observer {
+					mViewModel.addModel(mNavArgs.filePath, mNavArgs.sensorMap)
+					mViewModel.mCompleteLiveData.observe(viewLifecycleOwner, {
 						if (it == true) {
 							navigateHome()
 						} else if (it == false) {

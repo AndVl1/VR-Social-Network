@@ -1,38 +1,35 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui.camera
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.camera.core.*
-import androidx.camera.core.impl.VideoCaptureConfig
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.getSystemServiceName
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import ru.bmstu.iu9.vrsocialnetwork.R
+import ru.bmstu.iu9.vrsocialnetwork.data.SensorMap
 import java.io.File
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
-class CameraFragment : Fragment() {
+class CameraFragment : Fragment(), SensorEventListener {
 	private var mPreviewView: PreviewView? = null
 	private var mCaptureView: CardView? = null
 	private var mImageCapture: ImageCapture? = null
@@ -41,7 +38,10 @@ class CameraFragment : Fragment() {
 	private lateinit var mOutputDirectory: File
 	private var mCount = 0
 	private lateinit var mSensorManager: SensorManager
+	private lateinit var mAccelerometer: Sensor
 	private var mCurrentLens = CameraSelector.LENS_FACING_BACK
+	private lateinit var mCurrentPos : FloatArray
+	private lateinit var mSensorPositions : SensorMap
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -52,7 +52,10 @@ class CameraFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
+		mSensorPositions = SensorMap()
+
 		mSensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
 		mPreviewView = view.findViewById(R.id.camera_captureView)
 		mPreviewView?.setOnClickListener {
@@ -86,6 +89,16 @@ class CameraFragment : Fragment() {
 		stopButton.setOnClickListener {
 			navigateToNext(Uri.fromFile(mOutputDirectory).path.toString())
 		}
+	}
+
+	override fun onPause() {
+		super.onPause()
+		mSensorManager.unregisterListener(this)
+	}
+
+	override fun onResume() {
+		super.onResume()
+		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
 	}
 
 	private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -171,8 +184,6 @@ class CameraFragment : Fragment() {
 							.show()
 						Log.e(TAG, "Image npt saved")
 					}
-
-					// TODO take sensors pos
 				}
 
 				override fun onError(exception: ImageCaptureException) {
@@ -180,23 +191,29 @@ class CameraFragment : Fragment() {
 				}
 			}
 		)
-		val rotationMatrix = FloatArray(9)
-		val orientationAngles = FloatArray(3)
-		SensorManager.getOrientation(rotationMatrix, orientationAngles)
-		Log.d(TAG, "${rotationMatrix}, $orientationAngles")
-		rotationMatrix.forEach {
-			println(it)
-		}
-		orientationAngles.forEach {
-			println(it)
+		mSensorPositions[mCount] = ArrayList()
+		mCurrentPos.forEach {
+			Log.d(TAG, it.toString())
+			mSensorPositions[mCount]?.add(it)
 		}
 	}
 
 	private fun navigateToNext(path: String) {
 		val direction = CameraFragmentDirections.actionCameraFragmentToPostPreviewFragment(
-			filePath = path
+			filePath = path,
+			sensorMap = mSensorPositions
 		)
 		findNavController().navigate(direction)
+	}
+
+	override fun onSensorChanged(event: SensorEvent?) {
+		if (event?.values != null) {
+			mCurrentPos = event.values
+		}
+	}
+
+	override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+
 	}
 
 	companion object {

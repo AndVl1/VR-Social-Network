@@ -1,14 +1,12 @@
 package ru.bmstu.iu9.vrsocialnetwork.ui.preview
 
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import ru.bmstu.iu9.vrsocialnetwork.data.SensorMap
 import ru.bmstu.iu9.vrsocialnetwork.data.model.Post
+import ru.bmstu.iu9.vrsocialnetwork.data.model.PostModel
 import ru.bmstu.iu9.vrsocialnetwork.data.repository.MainRepository
 
 class PostPreviewViewModel @ViewModelInject constructor(
@@ -30,6 +28,18 @@ class PostPreviewViewModel @ViewModelInject constructor(
 					imageLink = path
 				),
 				viewModelScope
+			))
+		}
+	}
+
+	fun addModel(path: String, sensorMap: SensorMap) {
+		mCompleteLiveData = liveData(viewModelScope.coroutineContext) {
+			emit(mMainRepository.addModel(
+				PostModel(
+					uID = mAuth.uid ?: "",
+					sensors = sensorMap,
+					imagesLink = path
+				), viewModelScope
 			))
 		}
 	}

@@ -9,8 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import retrofit2.await
 import ru.bmstu.iu9.vrsocialnetwork.data.api.ApiService
 import ru.bmstu.iu9.vrsocialnetwork.data.model.Post
+import ru.bmstu.iu9.vrsocialnetwork.data.model.PostModel
 import ru.bmstu.iu9.vrsocialnetwork.data.room.PostsDao
 import java.io.File
 import javax.inject.Inject
@@ -32,6 +34,42 @@ class MainRepository @Inject constructor(
 	suspend fun getLoadedPosts(scope: CoroutineScope) {
 		scope.launch {
 			mPostsDao.loadAll()
+		}
+	}
+
+	suspend fun addModel(model: PostModel, scope: CoroutineScope): Boolean {
+		return withContext(scope.coroutineContext) {
+
+			val folder = File(model.imagesLink)
+			var res: Boolean
+			try {
+				var link: String
+				mIOScope.launch {
+
+					val ref = mStorage.reference
+						.child("userPhotos/")
+						.child("${folder.name}/")
+
+					for (file in folder.listFiles()) {
+						val dest = ref.child(file.name)
+						dest.putFile(Uri.fromFile(file))
+							.await()
+					}
+
+					model.imagesLink = "userPhotos/${folder.name}"
+					Log.d(TAG, model.toString())
+					try {
+						mApiService.addModel(model).await()
+					} catch (e: Exception) {
+						e.printStackTrace()
+					}
+				}.join()
+				res = true
+			} catch (e: Exception) {
+				Log.e(TAG, e.message ?: "err")
+				res = false
+			}
+			res
 		}
 	}
 
