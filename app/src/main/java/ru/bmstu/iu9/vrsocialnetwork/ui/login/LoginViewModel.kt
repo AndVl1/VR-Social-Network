@@ -3,6 +3,8 @@ package ru.bmstu.iu9.vrsocialnetwork.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
 import ru.bmstu.iu9.vrsocialnetwork.data.repository.LoginRepository
 
@@ -15,7 +17,10 @@ class LoginViewModel @ViewModelInject constructor (private val loginRepository: 
 	lateinit var createdUserLiveData: LiveData<User>
 
 	fun authWithGoogle(googleAuthCredential: AuthCredential) {
-		userLiveData = loginRepository.firebaseSignInWithGoogle(googleAuthCredential)
+//		userLiveData = loginRepository.firebaseSignInWithGoogle(googleAuthCredential)
+		userLiveData = liveData(viewModelScope.coroutineContext) {
+			emit(loginRepository.firebaseSignInWithGoogle(googleAuthCredential))
+		}
 	}
 
 	fun createNewUser(user: User) {

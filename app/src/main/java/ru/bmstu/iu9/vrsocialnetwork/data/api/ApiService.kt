@@ -25,4 +25,7 @@ interface ApiService {
 
 	@POST("/models")
 	suspend fun addModel(@Body model: PostModel): Call<Int>
+
+	@POST("/clients")
+	suspend fun addClient(@Body client: User)
 }

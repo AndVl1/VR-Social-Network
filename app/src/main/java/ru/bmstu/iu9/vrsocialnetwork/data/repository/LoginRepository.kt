@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.tasks.await
 import ru.bmstu.iu9.vrsocialnetwork.data.model.User
 import javax.inject.Inject
 
@@ -14,21 +15,20 @@ import javax.inject.Inject
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository @Inject constructor() {
+class LoginRepository @Inject constructor(private val mMainRepository: MainRepository) {
     private val mAuth = FirebaseAuth.getInstance()
 
     fun logOut() {
         mAuth.signOut()
     }
 
-    fun firebaseSignInWithGoogle(googleAuthCredential: AuthCredential): MutableLiveData<User> {
-        val authenticatedUserMutableLiveData =
-            MutableLiveData<User>()
+    suspend fun firebaseSignInWithGoogle(googleAuthCredential: AuthCredential): User {
+        var authenticatedUser = User()
         // TODO run in coroutine
-        mAuth.signInWithCredential(googleAuthCredential).addOnCompleteListener { authTask ->
-            if (authTask.isSuccessful) {
+        val task = mAuth.signInWithCredential(googleAuthCredential).await()
+            if (task != null) {
                 val isNewUser: Boolean =
-                    authTask.result!!.additionalUserInfo!!.isNewUser
+                    task.additionalUserInfo!!.isNewUser
                 val firebaseUser: FirebaseUser? = mAuth.currentUser
                 if (firebaseUser != null) {
                     val uid = firebaseUser.uid
@@ -39,14 +39,16 @@ class LoginRepository @Inject constructor() {
                             name = name,
                             email = email
                         )
+                    Log.d(TAG, user.toString())
+                    mMainRepository.addClient(user)
                     user.isNew = isNewUser
-                    authenticatedUserMutableLiveData.value = user
+                    authenticatedUser = user
                 }
             } else {
-                Log.e(TAG, authTask.exception?.message ?: "Not successful")
+                Log.e(TAG, "Not successful")
             }
-        }
-        return authenticatedUserMutableLiveData
+
+        return authenticatedUser
     }
 
     fun createNewUserIfNorExist(user: User): MutableLiveData<User> {

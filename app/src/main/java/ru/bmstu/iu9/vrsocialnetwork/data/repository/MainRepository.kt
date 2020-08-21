@@ -13,6 +13,7 @@ import retrofit2.await
 import ru.bmstu.iu9.vrsocialnetwork.data.api.ApiService
 import ru.bmstu.iu9.vrsocialnetwork.data.model.Post
 import ru.bmstu.iu9.vrsocialnetwork.data.model.PostModel
+import ru.bmstu.iu9.vrsocialnetwork.data.model.User
 import ru.bmstu.iu9.vrsocialnetwork.data.room.PostsDao
 import java.io.File
 import javax.inject.Inject
@@ -68,6 +69,18 @@ class MainRepository @Inject constructor(
 			} catch (e: Exception) {
 				Log.e(TAG, e.message ?: "err")
 				res = false
+			}
+			res
+		}
+	}
+
+	suspend fun addClient(client: User): Boolean {
+		return withContext(mIOScope.coroutineContext) {
+			val res = true
+			try {
+				mApiService.addClient(client)
+			} catch (e: Exception) {
+				Log.e(TAG, e.stackTraceToString())
 			}
 			res
 		}
