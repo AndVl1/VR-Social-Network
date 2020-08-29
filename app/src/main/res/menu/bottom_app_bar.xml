@@ -7,4 +7,10 @@
 		android:icon="@drawable/outline_search_24dp"
 		android:title="@string/search_menuItem"
 		app:showAsAction="ifRoom"/>
+
+	<item
+		android:id="@+id/logout"
+		android:icon="@drawable/outline_logout_24dp"
+		android:title="@string/logout"
+		app:showAsAction="ifRoom"/>
 </menu>

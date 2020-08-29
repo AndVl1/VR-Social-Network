@@ -40,8 +40,15 @@ class CameraFragment : Fragment(), SensorEventListener {
 	private lateinit var mSensorManager: SensorManager
 	private lateinit var mAccelerometer: Sensor
 	private var mCurrentLens = CameraSelector.LENS_FACING_BACK
-	private lateinit var mCurrentPos : FloatArray
+	private var mCurrentAccelerometerParam : FloatArray? = null
+	private lateinit var mCurrentVelocity: FloatArray
+	private var mCurrentAcceleration: FloatArray? = null
+	private lateinit var mPreviousAccelerometerParam: FloatArray
 	private lateinit var mSensorPositions : SensorMap
+	private var mPreviousTime : Long = 0
+	private var mTime : Long = 0
+	private lateinit var mRadiusVec : FloatArray
+	private var mAccelerationStarted = false
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -52,10 +59,14 @@ class CameraFragment : Fragment(), SensorEventListener {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
+		mCurrentVelocity = floatArrayOf(0f, 0f, 0f)
+		mCurrentAcceleration = floatArrayOf(0f, 0f, 0f)
+		mRadiusVec = floatArrayOf(0f, 0f, 0f)
+
 		mSensorPositions = SensorMap()
 
 		mSensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
 
 		mPreviewView = view.findViewById(R.id.camera_captureView)
 		mPreviewView?.setOnClickListener {
@@ -192,10 +203,11 @@ class CameraFragment : Fragment(), SensorEventListener {
 			}
 		)
 		mSensorPositions[mCount] = ArrayList()
-		mCurrentPos.forEach {
-			Log.d(TAG, it.toString())
+		mCurrentAccelerometerParam?.forEach {
+			print("$it ")
 			mSensorPositions[mCount]?.add(it)
 		}
+		println()
 	}
 
 	private fun navigateToNext(path: String) {
@@ -208,7 +220,31 @@ class CameraFragment : Fragment(), SensorEventListener {
 
 	override fun onSensorChanged(event: SensorEvent?) {
 		if (event?.values != null) {
-			mCurrentPos = event.values
+			mCurrentAccelerometerParam = event.values
+			mTime = System.currentTimeMillis()
+			if (mAccelerationStarted) {
+				mCurrentAcceleration = floatArrayOf(
+					mCurrentAccelerometerParam!![0] - mPreviousAccelerometerParam[0],
+					mCurrentAccelerometerParam!![1] - mPreviousAccelerometerParam[1],
+					mCurrentAccelerometerParam!![2] - mPreviousAccelerometerParam[2],
+				)
+				val deltaTime = (mTime - mPreviousTime).toFloat() / 1000
+				mCurrentVelocity = floatArrayOf(
+					mCurrentVelocity[0] + deltaTime * mCurrentAcceleration!![0],
+					mCurrentVelocity[1] + deltaTime * mCurrentAcceleration!![1],
+					mCurrentVelocity[2] + deltaTime * mCurrentAcceleration!![2],
+				)
+				mRadiusVec = floatArrayOf(
+					mRadiusVec[0] + deltaTime * mCurrentAcceleration!![0],
+					mRadiusVec[1] + deltaTime * mCurrentAcceleration!![1],
+					mRadiusVec[2] + deltaTime * mCurrentAcceleration!![2],
+				)
+
+//				println(deltaTime)
+			}
+			mAccelerationStarted = true
+			mPreviousTime = mTime
+			mPreviousAccelerometerParam = mCurrentAccelerometerParam!!.copyOf()
 		}
 	}
 
@@ -221,6 +257,5 @@ class CameraFragment : Fragment(), SensorEventListener {
 		private const val REQUEST_CODE_PERMISSION = 1111
 		const val TAG = "CAMERA PREVIEW"
 		private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-		private const val BURST_FRAMERATE = 10
 	}
 }

@@ -30,4 +30,5 @@
 	<string name="error_storage">Error while uploading</string>
 	<string name="stop_recording">Stop</string>
 	<string name="post_image">Image associated with post</string>
+	<string name="logout">Logout</string>
 </resources>

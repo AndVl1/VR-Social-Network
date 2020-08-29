@@ -5,7 +5,9 @@ import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -13,15 +15,19 @@ import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_test.*
 import ru.bmstu.iu9.vrsocialnetwork.R
 import ru.bmstu.iu9.vrsocialnetwork.databinding.BottomTestBinding
 import ru.bmstu.iu9.vrsocialnetwork.ui.camera.CameraFragmentDirections
 import ru.bmstu.iu9.vrsocialnetwork.ui.home.HomeFragmentDirections
+import ru.bmstu.iu9.vrsocialnetwork.ui.login.LoginFragmentDirections
+import java.io.FileInputStream
 
 @AndroidEntryPoint
-class Main2Activity: AppCompatActivity(), NavController.OnDestinationChangedListener {
+class Main2Activity: AppCompatActivity(),
+	NavController.OnDestinationChangedListener {
 
 	lateinit var mAppBar: BottomAppBar
 	//private val mBinding:
@@ -67,6 +73,12 @@ class Main2Activity: AppCompatActivity(), NavController.OnDestinationChangedList
 	private fun navigateToCamera() {
 		setupBottomABForCamera()
 		val directions = HomeFragmentDirections.actionHomeFragmentToCameraFragment()
+		findNavController(R.id.nav_host_fragment2).navigate(directions)
+	}
+
+	private fun navigateToLogin() {
+		hideBottomAppBar()
+		val directions = LoginFragmentDirections.actionGlobalLoginFragment()
 		findNavController(R.id.nav_host_fragment2).navigate(directions)
 	}
 
@@ -122,6 +134,31 @@ class Main2Activity: AppCompatActivity(), NavController.OnDestinationChangedList
 		inflater.inflate(R.menu.bottom_app_bar, menu)
 		return true
 	}
+
+//	override fun onMenuItemClick(item: MenuItem?): Boolean {
+//		Log.d(TAG, item?.itemId.toString())
+//		when(item?.itemId) {
+//			R.id.logout -> {
+//				val auth = FirebaseAuth.getInstance()
+//				auth.signOut()
+//				navigateToLogin()
+//			}
+//		}
+//		return true
+//	}
+//
+//	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//		Log.d(TAG, item.itemId.toString())
+//		when(item.itemId) {
+//			R.id.logout -> {
+//				val auth = FirebaseAuth.getInstance()
+//				auth.signOut()
+//				navigateToLogin()
+//			}
+//		}
+//
+//		return super.onOptionsItemSelected(item)
+//	}
 
 	override fun onDestinationChanged(
 		controller: NavController,
