@@ -20,7 +20,8 @@ class PostsDataSource constructor(private val mRepository: MainRepository, priva
 	) {
 		mScope.launch {
 			try {
-				val response = mRepository.getPosts()
+				val response = mRepository.fetchPosts()
+				Log.d(TAG, response.message())
 				when {
 					response.isSuccessful -> {
 						val listing = response.body()?.data
@@ -37,7 +38,7 @@ class PostsDataSource constructor(private val mRepository: MainRepository, priva
 	override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Post>) {
 		mScope.launch {
 			try {
-				val response = mRepository.getPosts()
+				val response = mRepository.fetchPosts()
 				when {
 					response.isSuccessful -> {
 						val listing = response.body()?.data
@@ -54,7 +55,7 @@ class PostsDataSource constructor(private val mRepository: MainRepository, priva
 	override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, Post>) {
 		mScope.launch {
 			try {
-				val response = mRepository.getPosts()
+				val response = mRepository.fetchPosts()
 				when {
 					response.isSuccessful -> {
 						val listing = response.body()?.data
@@ -71,6 +72,10 @@ class PostsDataSource constructor(private val mRepository: MainRepository, priva
 	override fun invalidate() {
 		super.invalidate()
 		mJob.cancel()
+	}
+
+	companion object {
+		private const val TAG = "POSTS DS"
 	}
 
 }

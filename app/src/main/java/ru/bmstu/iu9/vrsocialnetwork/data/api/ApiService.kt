@@ -6,19 +6,21 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
-import ru.bmstu.iu9.vrsocialnetwork.data.model.ApiResponse
-import ru.bmstu.iu9.vrsocialnetwork.data.model.Post
-import ru.bmstu.iu9.vrsocialnetwork.data.model.PostModel
-import ru.bmstu.iu9.vrsocialnetwork.data.model.User
+import ru.bmstu.iu9.vrsocialnetwork.data.model.*
 
 interface ApiService {
 
-	@GET()
+	/** Paging */
+	@GET("/posts")
 	suspend fun fetchPosts(
 		@Query("limit") loadSize: Int = 30,
 		@Query("after") after: String? = null,
 		@Query("before") before: String? = null
 	): Response<ApiResponse>
+
+	/** Normal list */
+	@GET("/posts")
+	suspend fun getPosts(): List<Post>
 
 	@POST("/posts")
 	suspend fun addPost(@Body post: Post): Call<User>
