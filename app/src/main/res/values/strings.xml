@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">VR Social Network</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_feed">Feed</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_camera">Add photo</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -12,4 +12,23 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string name="fab_content">Adding new post</string>
+
+    <string name="favorite">Favorite</string>
+    <string name="settings">Settings</string>
+    <string name="name">Name</string>
+    <string name="preview_area">Camera Preview</string>
+    <string name="capture">Capture</string>
+    <string name="camera_permissions_error">Not all permissions granted</string>
+	<string name="search_menuItem">Search</string>
+	<string name="content_preview">Content Preview</string>
+    <string name="submit">Submit</string>
+    <string name="retry">Retry</string>
+	<string name="login_google">Login with Google</string>
+	<string name="firebase_exception">Your debug SHA key isn\'t connected to Firebase</string>
+	<string name="error_storage">Error while uploading</string>
+	<string name="stop_recording">Stop</string>
+	<string name="post_image">Image associated with post</string>
+	<string name="logout">Logout</string>
 </resources>

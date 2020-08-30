@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="Widget.LightTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+		<item name="enforceMaterialTheme">true</item>
+		<item name="backgroundTint">@color/design_default_color_on_primary</item>
+		<item name="fabCradleVerticalOffset">@dimen/mtrl_bottomappbar_fab_cradle_vertical_offset</item>
+		<item name="android:minHeight">@dimen/mtrl_bottomappbar_height</item>
+		<item name="maxButtonHeight">@dimen/mtrl_bottomappbar_height</item>
+		<item name="elevation">8dp</item>
+	</style>
+
+	<style name="Divider">
+		<item name="android:background">?android:attr/listDivider</item>
+	</style>
+	<style name="Divider.Horizontal" parent="Divider">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">1dp</item>
+	</style>
+	<style name="Plain" parent="BottomDialogTheme">
+		<item name="bottom_sheet_extra_padding">0dp</item>
+		<item name="should_draw_under_status_bar">false</item>
+	</style>
+</resources>

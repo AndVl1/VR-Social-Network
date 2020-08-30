@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/post_card"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="@dimen/post_layout_margin">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<de.hdodenhof.circleimageview.CircleImageView
+			android:id="@+id/post_profile_image"
+			android:layout_width="@dimen/post_profile_image_size"
+			android:layout_height="@dimen/post_profile_image_size"
+			app:civ_border_color="@color/black"
+			app:civ_border_width="@dimen/post_profile_image_border"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<TextView
+			android:id="@+id/post_nickname"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/post_profile_dimen"
+			android:text="@string/name"
+			android:textAlignment="center"
+			android:textSize="@dimen/post_profile_textSize"
+			app:layout_constraintBottom_toBottomOf="@id/post_profile_image"
+			app:layout_constraintStart_toEndOf="@id/post_profile_image"
+			app:layout_constraintTop_toTopOf="parent" />
+
+		<ImageView
+			android:id="@+id/post_image"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:src="@drawable/baseline_face_black_18dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/post_profile_image"
+			android:contentDescription="@string/post_image" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
