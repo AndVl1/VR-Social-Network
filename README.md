@@ -1,6 +1,7 @@
 # VR-Social-Network
 Summer 2020 practice
-Использованные библиотеки
+
+## Использованные библиотеки
 
 ### Язык программирования: Kotlin
 ### Библиотеки Android Jetpack
