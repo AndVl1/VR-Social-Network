@@ -4,44 +4,29 @@ import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import kotlinx.coroutines.Dispatchers
 import ru.bmstu.iu9.vrsocialnetwork.data.PostsDataSource
+import ru.bmstu.iu9.vrsocialnetwork.utils.Resource
 import ru.bmstu.iu9.vrsocialnetwork.data.model.Post
 import ru.bmstu.iu9.vrsocialnetwork.data.repository.MainRepository
 
 class HomeViewModel @ViewModelInject constructor(
-	mainRepository: MainRepository
+	private val mainRepository: MainRepository
 ) : ViewModel() {
-	var postsLiveData: LiveData<PagedList<Post>>
-	val dataSource = PostsDataSource(mainRepository, viewModelScope)
-	val mPostsList = LivePagedListBuilder(mainRepository.getLoadedPosts(), 20).build()
 
-	init {
-		val config = PagedList.Config.Builder()
-			.setPageSize(20)
-			.build()
-//		postsLiveData = initializedPagedListBuilder(config).build()
-		postsLiveData = LivePagedListBuilder(
-			mainRepository.getLoadedPosts(), config
-		).build()
-
-		Log.d(TAG, "${postsLiveData.value?.size}")
-	}
-
-	fun getPosts(): LiveData<PagedList<Post>> = postsLiveData
-
-	private fun initializedPagedListBuilder(config: PagedList.Config): LivePagedListBuilder<String, Post> {
-		val dataSourceFactory = object : DataSource.Factory<String, Post>() {
-			override fun create(): DataSource<String, Post> {
-				return dataSource
-			}
+	fun downloadPosts() = liveData(Dispatchers.IO) {
+		emit(Resource.loading(data = null))
+		try {
+			emit(Resource.success(data = mainRepository.getPosts()))
+		} catch (e: Exception) {
+			emit(Resource.error(data = null, msg = e.message ?: "Error Occurred!"))
 		}
-		return LivePagedListBuilder<String, Post>(dataSourceFactory, config)
 	}
-//	val mPosts = LivePagedListBuilder(mainRepository.getPostsAsDataSource(), 20).build()
 
 	companion object {
 		private const val TAG = "HOME VM"

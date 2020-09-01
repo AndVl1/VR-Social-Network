@@ -2,7 +2,10 @@ package ru.bmstu.iu9.vrsocialnetwork.data.repository
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.paging.DataSource
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +28,8 @@ class MainRepository @Inject constructor(
 	private val mStorage = FirebaseStorage.getInstance()
 	private val mIOScope = CoroutineScope(Dispatchers.IO)
 
-	suspend fun getPosts() = mApiService.fetchPosts()
+	suspend fun fetchPosts() = mApiService.fetchPosts()
+	suspend fun getPosts() = mApiService.getPosts()
 //	fun getLoadedPosts() = mPostsDao.loadAllAsDataSource()
 
 	fun getLoadedPosts(): DataSource.Factory<Int, Post> {
@@ -79,6 +83,19 @@ class MainRepository @Inject constructor(
 			val res = true
 			try {
 				mApiService.addClient(client)
+				FirebaseInstanceId.getInstance().instanceId
+					.addOnCompleteListener(OnCompleteListener { task ->
+						if (!task.isSuccessful) {
+							Log.w(TAG, "getInstanceId failed", task.exception)
+							return@OnCompleteListener
+						}
+
+						// Get new Instance ID token
+						val token = task.result?.token
+
+						// Log and toast
+						Log.d(TAG, token)
+					})
 			} catch (e: Exception) {
 				Log.e(TAG, e.stackTraceToString())
 			}
